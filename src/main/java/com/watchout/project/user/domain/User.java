@@ -3,6 +3,9 @@ package com.watchout.project.user.domain;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.watchout.project.common.auditing.AuditingTimeEntity;
+import com.watchout.project.history.domain.History;
+import com.watchout.project.keyword.domain.Keyword;
+import com.watchout.project.user.controller.dto.UserCreateRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +23,12 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class User extends AuditingTimeEntity {
 
+    public User(UserCreateRequest userCreateRequest) {
+        this.phoneNumber = userCreateRequest.getPhoneNumber();
+        this.keywords = new ArrayList<>();
+        this.histories = new ArrayList<>();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +36,10 @@ public class User extends AuditingTimeEntity {
     @Column(length = 20, unique = true)
     private String phoneNumber;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(length = 20, nullable = false, name = "tour_dates")
-    private List<String> keywords = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Keyword> keywords = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<History> histories = new ArrayList<>();
 
 }

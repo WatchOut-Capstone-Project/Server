@@ -1,29 +1,32 @@
-package com.watchout.project.history.domain;
-
+package com.watchout.project.keyword.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.watchout.project.common.auditing.AuditingTimeEntity;
-import com.watchout.project.keyword.domain.Keyword;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "HISTORY_TABLE")
+@Table(name = "KEYWORD_TABLE")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class History extends AuditingTimeEntity {
+public class Keyword extends AuditingTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Keyword keyword;
+    @Column(length = 20)
+    private String keyword;
+
+    private int callCount;
+
+    private boolean activate;
 
 }

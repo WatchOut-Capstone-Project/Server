@@ -1,6 +1,6 @@
 package com.watchout.project.common.response;
 
-import com.koing.server.koing_server.common.success.SuccessCode;
+import com.watchout.project.common.response.success.SuccessCode;
 import lombok.*;
 
 @ToString
@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SuccessResponse<T> extends SuperResponse {
-
     public static final SuccessResponse<String> SUCCESS = success(SuccessCode.SUCCESS, null);
 
     private int status;

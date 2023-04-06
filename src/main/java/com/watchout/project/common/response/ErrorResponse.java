@@ -1,6 +1,6 @@
 package com.watchout.project.common.response;
 
-import com.koing.server.koing_server.common.error.ErrorCode;
+import com.watchout.project.common.response.error.ErrorCode;
 import lombok.*;
 
 @ToString
