@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UserCreateRequest {
+public class UserCreateRequestDto {
 
     private String phoneNumber;
 

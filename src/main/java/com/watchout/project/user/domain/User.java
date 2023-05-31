@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.watchout.project.common.auditing.AuditingTimeEntity;
 import com.watchout.project.history.domain.History;
 import com.watchout.project.keyword.domain.Keyword;
-import com.watchout.project.user.controller.dto.UserCreateRequest;
-import lombok.AccessLevel;
+import com.watchout.project.user.controller.dto.UserCreateRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,8 +22,8 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class User extends AuditingTimeEntity {
 
-    public User(UserCreateRequest userCreateRequest) {
-        this.phoneNumber = userCreateRequest.getPhoneNumber();
+    public User(UserCreateRequestDto userCreateRequestDto) {
+        this.phoneNumber = userCreateRequestDto.getPhoneNumber();
         this.keywords = new ArrayList<>();
         this.histories = new ArrayList<>();
     }
