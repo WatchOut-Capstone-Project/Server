@@ -15,6 +15,7 @@ public enum SuccessCode {
      */
     SUCCESS(OK, "성공입니다."),
     GET_USER_SUCCESS(OK, "user : 유저 조회 성공입니다."),
+    GET_KEYWORDS_SUCCESS(OK, "keyword : 키워드 리스트 조회 성공입니다."),
 
     // 인증
     LOGIN_SUCCESS(OK, "signIn : 로그인 성공입니다."),
@@ -23,6 +24,7 @@ public enum SuccessCode {
      * 201 CREATED
      */
     USER_CREATE_SUCCESS(CREATED, "user : 유저 생성 성공입니다."),
+    KEYWORD_CREATE_SUCCESS(CREATED, "keyword : 키워드 생성 성공입니다."),
     /**
      * 202 ACCEPTED
      */

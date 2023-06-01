@@ -47,6 +47,7 @@ public class UserService {
     }
 
 
+    @Transactional
     public SuperResponse loginUser(UserCreateRequestDto userCreateRequestDto) {
         LOGGER.info("[UserService] 유저 로그인 시도");
 

@@ -41,4 +41,12 @@ public class User extends AuditingTimeEntity {
     @OneToMany(fetch = FetchType.LAZY)
     private List<History> histories = new ArrayList<>();
 
+    public void addKeyword(Keyword keyword) {
+        if (this.keywords == null) {
+            this.keywords = new ArrayList<>();
+        }
+
+        this.keywords.add(keyword);
+    }
+
 }
