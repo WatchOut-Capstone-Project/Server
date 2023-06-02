@@ -9,9 +9,8 @@ import com.watchout.project.common.response.error.ErrorCode;
 import com.watchout.project.common.response.success.SuccessCode;
 import com.watchout.project.keyword.domain.Keyword;
 import com.watchout.project.keyword.domain.repository.KeywordRepository;
-import com.watchout.project.keyword.service.dto.KeywordCreateRequestDto;
-import com.watchout.project.keyword.service.dto.KeywordListRequestDto;
-import com.watchout.project.keyword.service.dto.KeywordListResponseDto;
+import com.watchout.project.keyword.domain.repository.KeywordRepositoryImpl;
+import com.watchout.project.keyword.service.dto.*;
 import com.watchout.project.user.controller.dto.UserCreateRequestDto;
 import com.watchout.project.user.domain.User;
 import com.watchout.project.user.domain.repository.UserRepository;
@@ -32,6 +31,7 @@ public class KeywordService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final KeywordRepository keywordRepository;
+    private final KeywordRepositoryImpl keywordRepositoryImpl;
     private final UserRepositoryImpl userRepositoryImpl;
     private final UserRepository userRepository;
 
@@ -75,13 +75,37 @@ public class KeywordService {
 
         List<Keyword> keywords = user.getKeywords();
 
-        List<String> keywordList = new ArrayList<>();
+        List<KeywordResponseDto> keywordList = new ArrayList<>();
 
         for (Keyword keyword : keywords) {
-            keywordList.add(keyword.getKeyword());
+            keywordList.add(new KeywordResponseDto(keyword.getId(), keyword.getKeyword()));
         }
 
+        LOGGER.info("[KeywordService] 키워드 리스트 조회 성공");
+
         return SuccessResponse.success(SuccessCode.GET_KEYWORDS_SUCCESS, new KeywordListResponseDto(keywordList));
+    }
+
+    @Transactional
+    public SuperResponse deleteKeyword(KeywordDeleteRequestDto keywordDeleteRequestDto) {
+
+        LOGGER.info("[KeywordService] 키워드 삭제 시도");
+
+        Keyword keyword = keywordRepositoryImpl.findKeywordByKeywordId(keywordDeleteRequestDto.getKeywordId());
+
+        if (keyword == null) {
+            throw new NotFoundException("존재하지 않는 키워드입니다.",  ErrorCode.NOT_FOUND_KEYWORD_EXCEPTION);
+        }
+
+        User user = userRepositoryImpl.findUserByPhoneNumber(keywordDeleteRequestDto.getPhoneNumber());
+
+        user.deleteKeyword(keyword);
+
+        keywordRepository.delete(keyword);
+
+        User updatedUser = userRepository.save(user);
+
+        return SuccessResponse.success(SuccessCode.DELETE_KEYWORD_SUCCESS, null);
     }
 
 }

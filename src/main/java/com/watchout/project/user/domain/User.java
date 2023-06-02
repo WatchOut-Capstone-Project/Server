@@ -49,4 +49,10 @@ public class User extends AuditingTimeEntity {
         this.keywords.add(keyword);
     }
 
+    public void deleteKeyword(Keyword keyword) {
+        if (this.keywords.contains(keyword)) {
+            this.keywords.remove(keyword);
+        }
+    }
+
 }

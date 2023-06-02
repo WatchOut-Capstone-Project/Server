@@ -38,6 +38,7 @@ public enum ErrorCode {
      */
     NOT_FOUND_EXCEPTION(NOT_FOUND, "존재하지 않습니다."),
     NOT_FOUND_USER_EXCEPTION(NOT_FOUND, "탈퇴했거나 존재하지 않는 유저입니다."),
+    NOT_FOUND_KEYWORD_EXCEPTION(NOT_FOUND, "존재하지 않는 키워드입니다."),
 
 
     /**

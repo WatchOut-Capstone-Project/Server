@@ -6,6 +6,7 @@ import com.watchout.project.common.response.SuperResponse;
 import com.watchout.project.common.response.error.ErrorCode;
 import com.watchout.project.keyword.service.KeywordService;
 import com.watchout.project.keyword.service.dto.KeywordCreateRequestDto;
+import com.watchout.project.keyword.service.dto.KeywordDeleteRequestDto;
 import com.watchout.project.keyword.service.dto.KeywordListRequestDto;
 import com.watchout.project.keyword.service.dto.KeywordListResponseDto;
 import com.watchout.project.user.controller.dto.UserCreateRequestDto;
@@ -17,10 +18,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "Keyword")
 @RequestMapping("/keyword")
@@ -46,7 +44,6 @@ public class KeywordController {
         try {
             keywordCreateResponse = keywordService.createKeyword(keywordCreateRequestDto);
         } catch (BoilerplateException boilerplateException) {
-            System.out.println(boilerplateException.getErrorCode());
             return ErrorResponse.error(boilerplateException.getErrorCode());
         } catch (Exception exception) {
             return ErrorResponse.error(ErrorCode.INTERNAL_SERVER_EXCEPTION);
@@ -72,7 +69,6 @@ public class KeywordController {
         try {
             getKeywordsResponse = keywordService.getKeywords(keywordListRequestDto);
         } catch (BoilerplateException boilerplateException) {
-            System.out.println(boilerplateException.getErrorCode());
             return ErrorResponse.error(boilerplateException.getErrorCode());
         } catch (Exception exception) {
             return ErrorResponse.error(ErrorCode.INTERNAL_SERVER_EXCEPTION);
@@ -80,6 +76,30 @@ public class KeywordController {
         LOGGER.info("[KeywordController] 키워드 리스트 조회 성공");
 
         return getKeywordsResponse;
+    }
+
+
+    @ApiOperation("Keyword : 키워드를 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Keyword : 키워드 삭제 성공"),
+            @ApiResponse(code = 404, message = "존재하지 않는 키워드입니다."),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생했습니다.")
+    })
+    @PostMapping("/delete")
+    public SuperResponse deleteKeyword(@RequestBody KeywordDeleteRequestDto keywordDeleteRequestDto) {
+        LOGGER.info("[KeywordController] 키워드 삭제 시도");
+
+        SuperResponse deleteKeywordResponse;
+        try {
+            deleteKeywordResponse = keywordService.deleteKeyword(keywordDeleteRequestDto);
+        } catch (BoilerplateException boilerplateException) {
+            return ErrorResponse.error(boilerplateException.getErrorCode());
+        } catch (Exception exception) {
+            return ErrorResponse.error(ErrorCode.INTERNAL_SERVER_EXCEPTION);
+        }
+        LOGGER.info("[KeywordController] 키워드 삭제 성공");
+
+        return deleteKeywordResponse;
     }
 
 }

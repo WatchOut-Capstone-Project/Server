@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KeywordListResponseDto {
 
-    public KeywordListResponseDto(List<String> keywords) {
+    public KeywordListResponseDto(List<KeywordResponseDto> keywords) {
         this.keywords = keywords;
     }
 
-    private List<String> keywords;
+    private List<KeywordResponseDto> keywords;
 
 }
