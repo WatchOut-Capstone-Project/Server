@@ -21,7 +21,6 @@ public class Keyword extends AuditingTimeEntity {
 
     public Keyword(KeywordCreateRequestDto keywordCreateRequestDto) {
         this.keyword = keywordCreateRequestDto.getKeyword();
-        this.callCount = 0;
         this.activate = true;
     }
 
@@ -31,8 +30,6 @@ public class Keyword extends AuditingTimeEntity {
 
     @Column(length = 20)
     private String keyword;
-
-    private int callCount;
 
     private boolean activate;
 

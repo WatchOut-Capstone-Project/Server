@@ -26,14 +26,18 @@ public enum SuccessCode {
      */
     USER_CREATE_SUCCESS(CREATED, "user : 유저 생성 성공입니다."),
     KEYWORD_CREATE_SUCCESS(CREATED, "keyword : 키워드 생성 성공입니다."),
+    HISTORY_CREATE_SUCCESS(CREATED, "history : 키워드 기록 생성 성공입니다."),
+    HISTORY_UPDATE_SUCCESS(CREATED, "history : 키워드 기록 업데이트 성공입니다."),
+
     /**
      * 202 ACCEPTED
      */
-    SIGN_UP_EMAIL_CHECK_SUCCESS(ACCEPTED, "sign-up/email-check : 사용가능한 이메일 입니다.")
+    SIGN_UP_EMAIL_CHECK_SUCCESS(ACCEPTED, "sign-up/email-check : 사용가능한 이메일 입니다."),
 
     /**
      * 204 NO_CONTENT
      */
+    NO_MATCH_KEYWORD_SUCCESS(NO_CONTENT, "history : 매칭되는 키워드는 없습니다."),
     ;
 
     private final SuccessStatusCode statusCode;

@@ -27,6 +27,7 @@ public enum ErrorCode {
     DB_FAIL_EXCEPTION(DB_HANDLE_FAIL, "DB처리 과정에서 오류가 발생했습니다. 다시 시도해 주세요."),
     DB_FAIL_USER_CREATE_FAIL_EXCEPTION(DB_HANDLE_FAIL, "유저 생성 과정에서 오류가 발생했습니다. 다시 시도해 주세요."),
     DB_FAIL_KEYWORD_CREATE_FAIL_EXCEPTION(DB_HANDLE_FAIL, "키워드 생성 과정에서 오류가 발생했습니다. 다시 시도해 주세요."),
+    DB_FAIL_HISTORY_CREATE_FAIL_EXCEPTION(DB_HANDLE_FAIL, "키워드 기록 생성 과정에서 오류가 발생했습니다. 다시 시도해 주세요."),
 
     /**
      * 403 Forbidden

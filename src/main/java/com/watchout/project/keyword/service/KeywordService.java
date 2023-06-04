@@ -7,6 +7,9 @@ import com.watchout.project.common.response.SuccessResponse;
 import com.watchout.project.common.response.SuperResponse;
 import com.watchout.project.common.response.error.ErrorCode;
 import com.watchout.project.common.response.success.SuccessCode;
+import com.watchout.project.history.domain.History;
+import com.watchout.project.history.domain.repository.HistoryRepository;
+import com.watchout.project.history.domain.repository.HistoryRepositoryImpl;
 import com.watchout.project.keyword.domain.Keyword;
 import com.watchout.project.keyword.domain.repository.KeywordRepository;
 import com.watchout.project.keyword.domain.repository.KeywordRepositoryImpl;
@@ -34,10 +37,13 @@ public class KeywordService {
     private final KeywordRepositoryImpl keywordRepositoryImpl;
     private final UserRepositoryImpl userRepositoryImpl;
     private final UserRepository userRepository;
+    private final HistoryRepositoryImpl historyRepositoryImpl;
+    private final HistoryRepository historyRepository;
 
     @Transactional
     public SuperResponse createKeyword(KeywordCreateRequestDto keywordCreateRequestDto) {
         LOGGER.info("[KeywordService] 키워드 생성 시도");
+
 
         Keyword keyword = new Keyword(keywordCreateRequestDto);
 
@@ -67,11 +73,7 @@ public class KeywordService {
 
         LOGGER.info("[KeywordService] 키워드 리스트 조회 시도");
 
-        User user = userRepositoryImpl.findUserByPhoneNumber(keywordListRequestDto.getPhoneNumber());
-
-        if (user == null) {
-            throw new NotFoundException("탈퇴했거나 존재하지 않는 유저입니다.", ErrorCode.NOT_FOUND_USER_EXCEPTION);
-        }
+        User user = getUser(keywordListRequestDto.getPhoneNumber());
 
         List<Keyword> keywords = user.getKeywords();
 
@@ -97,15 +99,31 @@ public class KeywordService {
             throw new NotFoundException("존재하지 않는 키워드입니다.",  ErrorCode.NOT_FOUND_KEYWORD_EXCEPTION);
         }
 
+        History history = historyRepositoryImpl.findHistoryByPhoneNumberAndKeyword(keywordDeleteRequestDto.getPhoneNumber(), keyword.getKeyword());
+
         User user = userRepositoryImpl.findUserByPhoneNumber(keywordDeleteRequestDto.getPhoneNumber());
 
         user.deleteKeyword(keyword);
 
+        history.deleteUser(user);
+        history.deleteKeyword();
+
         keywordRepository.delete(keyword);
+        historyRepository.delete(history);
 
         User updatedUser = userRepository.save(user);
 
         return SuccessResponse.success(SuccessCode.DELETE_KEYWORD_SUCCESS, null);
+    }
+
+    private User getUser(String phoneNumber) {
+        User user = userRepositoryImpl.findUserByPhoneNumber(phoneNumber);
+
+        if (user == null) {
+            throw new NotFoundException("탈퇴했거나 존재하지 않는 유저입니다.", ErrorCode.NOT_FOUND_USER_EXCEPTION);
+        }
+
+        return user;
     }
 
 }
