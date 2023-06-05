@@ -9,6 +9,9 @@ import com.watchout.project.common.response.success.SuccessCode;
 import com.watchout.project.history.domain.History;
 import com.watchout.project.history.domain.repository.HistoryRepository;
 import com.watchout.project.history.domain.repository.HistoryRepositoryImpl;
+import com.watchout.project.history.service.dto.HistoryListResponseDto;
+import com.watchout.project.history.service.dto.HistoryRequestDto;
+import com.watchout.project.history.service.dto.HistoryResponseDto;
 import com.watchout.project.keyword.domain.Keyword;
 import com.watchout.project.history.service.dto.HistoryUpdateRequestDto;
 import com.watchout.project.user.domain.User;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -94,6 +98,22 @@ public class HistoryService {
         return SuccessResponse.success(SuccessCode.NO_MATCH_KEYWORD_SUCCESS, null);
     }
 
+    @Transactional
+    public SuperResponse getHistory(HistoryRequestDto historyRequestDto) {
+        LOGGER.info("[HistoryService] 키워드 count 조회 시도");
+
+        List<History> histories = getHistories(historyRequestDto.getPhoneNumber());
+
+        List<HistoryResponseDto> historyResponseDtos = new ArrayList<>();
+
+        for (History history : histories) {
+            historyResponseDtos.add(new HistoryResponseDto(history));
+        }
+
+        return SuccessResponse.success(SuccessCode.GET_HISTORIES_SUCCESS, new HistoryListResponseDto(historyResponseDtos));
+    }
+
+
     private User getUser(String phoneNumber) {
         User user = userRepositoryImpl.findUserByPhoneNumber(phoneNumber);
 
@@ -106,6 +126,15 @@ public class HistoryService {
 
     private String createdAtFormatting(LocalDateTime createdAt) {
         return createdAt.format(DateTimeFormatter.ofPattern("HH"));
+    }
+
+    private List<History> getHistories(String phoneNumber) {
+
+        User user = getUser(phoneNumber);
+
+        List<History> histories = user.getHistories();
+
+        return histories;
     }
 
 }

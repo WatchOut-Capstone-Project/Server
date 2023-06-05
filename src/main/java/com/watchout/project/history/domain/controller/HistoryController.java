@@ -6,6 +6,7 @@ import com.watchout.project.common.response.ErrorResponse;
 import com.watchout.project.common.response.SuperResponse;
 import com.watchout.project.common.response.error.ErrorCode;
 import com.watchout.project.history.service.HistoryService;
+import com.watchout.project.history.service.dto.HistoryRequestDto;
 import com.watchout.project.history.service.dto.HistoryUpdateRequestDto;
 import com.watchout.project.keyword.service.dto.KeywordCreateRequestDto;
 import com.watchout.project.user.service.UserService;
@@ -53,6 +54,30 @@ public class HistoryController {
         LOGGER.info("[HistoryController] 키워드 매칭 확인 성공");
 
         return historyCreateResponse;
+    }
+
+
+    @ApiOperation("History : 키워드 기록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "History : 키워드 기록 조회 성공"),
+            @ApiResponse(code = 404, message = "탈퇴했거나 존재하지 않는 유저입니다."),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생했습니다.")
+    })
+    @PostMapping("/histories")
+    public SuperResponse getHistories(@RequestBody HistoryRequestDto historyRequestDto) {
+        LOGGER.info("[HistoryController] 키워드 기록 조회 시도");
+
+        SuperResponse getHistoriesResponse;
+        try {
+            getHistoriesResponse = historyService.getHistory(historyRequestDto);
+        } catch (BoilerplateException boilerplateException) {
+            return ErrorResponse.error(boilerplateException.getErrorCode());
+        } catch (Exception exception) {
+            return ErrorResponse.error(ErrorCode.INTERNAL_SERVER_EXCEPTION);
+        }
+        LOGGER.info("[HistoryController] 키워드 기록 조회 성공");
+
+        return getHistoriesResponse;
     }
 
 }
