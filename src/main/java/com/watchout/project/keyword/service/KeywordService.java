@@ -44,10 +44,17 @@ public class KeywordService {
     public SuperResponse createKeyword(KeywordCreateRequestDto keywordCreateRequestDto) {
         LOGGER.info("[KeywordService] 키워드 생성 시도");
 
+        User user = getUser(keywordCreateRequestDto.getPhoneNumber());
+
+        List<Keyword> keywords = user.getKeywords();
+
+        for (Keyword keyword : keywords) {
+            if (keyword.getKeyword().equals(keywordCreateRequestDto.getKeyword())) {
+                throw new NotAcceptableException("이미 등록된 키워드 입니다.", ErrorCode.NOT_ACCEPTABLE_ALREADY_EXIST_KEYWORD_EXCEPTION);
+            }
+        }
 
         Keyword keyword = new Keyword(keywordCreateRequestDto);
-
-        User user = userRepositoryImpl.findUserByPhoneNumber(keywordCreateRequestDto.getPhoneNumber());
 
         if (user == null) {
             throw new NotFoundException("탈퇴했거나 존재하지 않는 유저입니다.", ErrorCode.NOT_FOUND_USER_EXCEPTION);
