@@ -6,6 +6,7 @@ import com.watchout.project.common.response.ErrorResponse;
 import com.watchout.project.common.response.SuperResponse;
 import com.watchout.project.common.response.error.ErrorCode;
 import com.watchout.project.history.service.HistoryService;
+import com.watchout.project.history.service.dto.HistoryConfirmRequestDto;
 import com.watchout.project.history.service.dto.HistoryRequestDto;
 import com.watchout.project.history.service.dto.HistoryUpdateRequestDto;
 import com.watchout.project.keyword.service.dto.KeywordCreateRequestDto;
@@ -17,10 +18,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "History")
 @RequestMapping("/history")
@@ -78,6 +76,30 @@ public class HistoryController {
         LOGGER.info("[HistoryController] 키워드 기록 조회 성공");
 
         return getHistoriesResponse;
+    }
+
+
+    @ApiOperation("History : 키워드 확인 횟수를 업데이트합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "History : 키워드 확인 횟수 업데이트 성공"),
+            @ApiResponse(code = 404, message = "존재하지 않는 키워드입니다."),
+            @ApiResponse(code = 500, message = "예상치 못한 서버 에러가 발생했습니다.")
+    })
+    @PatchMapping("/confirm")
+    public SuperResponse checkConfirm(@RequestBody HistoryConfirmRequestDto historyConfirmRequestDto) {
+        LOGGER.info("[HistoryController] 키워드 확인 횟수 업데이트 시도");
+
+        SuperResponse checkConfirmResponse;
+        try {
+            checkConfirmResponse = historyService.checkKeywordConfirm(historyConfirmRequestDto);
+        } catch (BoilerplateException boilerplateException) {
+            return ErrorResponse.error(boilerplateException.getErrorCode());
+        } catch (Exception exception) {
+            return ErrorResponse.error(ErrorCode.INTERNAL_SERVER_EXCEPTION);
+        }
+        LOGGER.info("[HistoryController] 키워드 확인 횟수 업데이트 성공");
+
+        return checkConfirmResponse;
     }
 
 }

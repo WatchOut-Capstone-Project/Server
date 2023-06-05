@@ -9,11 +9,8 @@ import com.watchout.project.common.response.success.SuccessCode;
 import com.watchout.project.history.domain.History;
 import com.watchout.project.history.domain.repository.HistoryRepository;
 import com.watchout.project.history.domain.repository.HistoryRepositoryImpl;
-import com.watchout.project.history.service.dto.HistoryListResponseDto;
-import com.watchout.project.history.service.dto.HistoryRequestDto;
-import com.watchout.project.history.service.dto.HistoryResponseDto;
+import com.watchout.project.history.service.dto.*;
 import com.watchout.project.keyword.domain.Keyword;
-import com.watchout.project.history.service.dto.HistoryUpdateRequestDto;
 import com.watchout.project.user.domain.User;
 import com.watchout.project.user.domain.repository.UserRepositoryImpl;
 import lombok.RequiredArgsConstructor;
@@ -111,6 +108,23 @@ public class HistoryService {
         }
 
         return SuccessResponse.success(SuccessCode.GET_HISTORIES_SUCCESS, new HistoryListResponseDto(historyResponseDtos));
+    }
+
+    @Transactional
+    public SuperResponse checkKeywordConfirm(HistoryConfirmRequestDto historyConfirmRequestDto) {
+
+        History history = historyRepositoryImpl.findHistoryByPhoneNumberAndKeyword(historyConfirmRequestDto.getPhoneNumber(), historyConfirmRequestDto.getKeyword());
+
+        if (history == null) {
+            throw new NotFoundException("존재하지 않는 키워드 기록 입니다.", ErrorCode.NOT_FOUND_HISTORY_EXCEPTION);
+        }
+
+        int prevConfirmCount = history.getConfirmCount();
+        history.setConfirmCount(prevConfirmCount + 1);
+
+        History updatedHistory = historyRepository.save(history);
+
+        return SuccessResponse.success(SuccessCode.HISTORY_UPDATE_SUCCESS, null);
     }
 
 
