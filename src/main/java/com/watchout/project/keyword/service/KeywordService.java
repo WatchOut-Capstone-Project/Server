@@ -109,14 +109,16 @@ public class KeywordService {
         History history = historyRepositoryImpl.findHistoryByPhoneNumberAndKeyword(keywordDeleteRequestDto.getPhoneNumber(), keyword.getKeyword());
 
         User user = userRepositoryImpl.findUserByPhoneNumber(keywordDeleteRequestDto.getPhoneNumber());
-
         user.deleteKeyword(keyword);
 
-        history.deleteUser(user);
-        history.deleteKeyword();
+        if (history != null) {
+            history.deleteUser(user);
+            history.deleteKeyword();
+
+            historyRepository.delete(history);
+        }
 
         keywordRepository.delete(keyword);
-        historyRepository.delete(history);
 
         User updatedUser = userRepository.save(user);
 
