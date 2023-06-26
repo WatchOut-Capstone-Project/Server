@@ -63,7 +63,7 @@ public class HistoryService {
 
                     LOGGER.info("[HistoryService] 키워드 기록 업데이트 성공");
 
-                    return SuccessResponse.success(SuccessCode.HISTORY_UPDATE_SUCCESS, null);
+                    return SuccessResponse.success(SuccessCode.HISTORY_UPDATE_SUCCESS, keyword);
                 }
                 else {
                     LOGGER.info("[HistoryService] 키워드 기록 생성 시도");
@@ -85,7 +85,7 @@ public class HistoryService {
 
                     LOGGER.info("[HistoryService] 키워드 기록 생성 성공");
 
-                    return SuccessResponse.success(SuccessCode.HISTORY_CREATE_SUCCESS, null);
+                    return SuccessResponse.success(SuccessCode.HISTORY_CREATE_SUCCESS, keyword);
                 }
             }
         }
